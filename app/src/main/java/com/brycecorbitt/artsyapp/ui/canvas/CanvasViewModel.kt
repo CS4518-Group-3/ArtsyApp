@@ -1,13 +1,13 @@
-package com.brycecorbitt.artsyapp.ui.notifications
+package com.brycecorbitt.artsyapp.ui.canvas
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class NotificationsViewModel : ViewModel() {
+class CanvasViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+        value = "This is canvas Fragment"
     }
     val text: LiveData<String> = _text
 }

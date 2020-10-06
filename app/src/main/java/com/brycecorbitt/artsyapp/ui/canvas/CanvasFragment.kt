@@ -1,4 +1,4 @@
-package com.brycecorbitt.artsyapp.ui.home
+package com.brycecorbitt.artsyapp.ui.canvas
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.brycecorbitt.artsyapp.R
 
-class HomeFragment : Fragment() {
+class CanvasFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var canvasViewModel: CanvasViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(this, Observer {
+        canvasViewModel =
+            ViewModelProviders.of(this).get(CanvasViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_canvas, container, false)
+        val textView: TextView = root.findViewById(R.id.text_canvas)
+        canvasViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
