@@ -15,7 +15,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:text="Select your distance units:"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
         <RadioGroup
             android:id="@+id/distanceRadioGroup"
@@ -55,7 +55,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center_horizontal"
             android:text="Select your location radius for posts (mi):"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
         <com.google.android.material.slider.Slider
             style="@style/Widget.AppCompat.SeekBar.Discrete"
@@ -100,7 +100,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center_horizontal"
             android:text="Choose a location for global mode:"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
 <!--        <SearchView
             android:id="@+id/test"
@@ -113,7 +113,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="70dp"
             android:backgroundTint="#fff"
             app:strokeWidth="0.5dp"
             app:strokeColor="#000"
@@ -133,7 +132,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center_horizontal"
             android:text="Sort by:"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
         <RadioGroup
             android:id="@+id/sortRadioGroup"
@@ -174,7 +173,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="left"
             android:text="Logged in as:"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
 
         <View

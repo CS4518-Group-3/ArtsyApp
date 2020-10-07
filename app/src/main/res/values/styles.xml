@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/design_default_color_on_secondary</item>
         <item name="colorPrimaryDark">@color/design_default_color_on_secondary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">#000</item>
     </style>
 
 </resources>
