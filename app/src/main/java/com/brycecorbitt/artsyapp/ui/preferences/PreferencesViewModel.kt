@@ -12,6 +12,7 @@ class PreferencesViewModel private constructor(context: Context) : ViewModel() {
     private var isLocation: Boolean = true
     private var lat: Double = 0.0 //user's location later
     private var long: Double = 0.0 //user's location later
+    private var locationButtonText: String = "Enter a Location:"
 
     val isCurrentUnitMiles: Boolean
         get() = isMiles
@@ -23,11 +24,14 @@ class PreferencesViewModel private constructor(context: Context) : ViewModel() {
         get() = lat
     val currentLong: Double
         get() = long
+    val currentLocationButtonText: String
+        get() = locationButtonText
     fun setIsCurrentUnitMiles(trueOrNah: Boolean) { isMiles = trueOrNah }
     fun setIsCurrentSortLocation(trueOrNah: Boolean) { isLocation = trueOrNah }
     fun setRadius(rad: Float) { radius = rad }
     fun setLat(lt: Double) { lat = lt}
     fun setLong(lg: Double) { long = lg }
+    fun setLocationButtonText(s: String) { locationButtonText = s }
 
     companion object {
         private var INSTANCE: PreferencesViewModel? = null

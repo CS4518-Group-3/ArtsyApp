@@ -1,5 +1,6 @@
 package com.brycecorbitt.artsyapp.ui.preferences
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,14 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import com.brycecorbitt.artsyapp.R
 import com.google.android.material.slider.Slider
+import com.shivtechs.maplocationpicker.LocationPickerActivity
+import com.shivtechs.maplocationpicker.MapUtility
 import kotlinx.android.synthetic.main.fragment_preferences.*
+import java.lang.Exception
+
+const val LOCATIONPICKERREQUEST = 2
 
 class PreferencesFragment : Fragment() {
 
@@ -32,6 +37,10 @@ class PreferencesFragment : Fragment() {
     private lateinit var emailTextView: TextView
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MapUtility.apiKey = resources.getString(R.string.your_api_key)
+    }
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -54,6 +63,7 @@ class PreferencesFragment : Fragment() {
         emailTextView = root.findViewById(R.id.emailTextView)
 
         emailTextView.text = "xxxxx@gmail.com"
+        locationButton.text = settingsViewModel.currentLocationButtonText
         return root
     }
 
@@ -94,7 +104,27 @@ class PreferencesFragment : Fragment() {
             //
         }
         locationButton.setOnClickListener{
-            //
+            val i: Intent = Intent(activity, LocationPickerActivity::class.java)
+            startActivityForResult(i, LOCATIONPICKERREQUEST)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == LOCATIONPICKERREQUEST) {
+            try {
+                if(data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+                    settingsViewModel.setLat(data.getDoubleExtra(MapUtility.LATITUDE, 0.0))
+                    settingsViewModel.setLong(data.getDoubleExtra(MapUtility.LONGITUDE, 0.0))
+                    var s: String? = data.getBundleExtra("fullAddress").getString("city")
+                    if (s != null) {
+                        settingsViewModel.setLocationButtonText(s)
+                        locationButton.text = settingsViewModel.currentLocationButtonText
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

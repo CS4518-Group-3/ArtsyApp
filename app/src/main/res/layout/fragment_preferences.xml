@@ -111,6 +111,7 @@
             android:backgroundTint="#fff"
             app:strokeWidth="0.5dp"
             app:strokeColor="#000"
+            android:textColor="#3d3d3d"
             android:textSize="25sp"
             android:hint="Enter a Location:" />
         <View
