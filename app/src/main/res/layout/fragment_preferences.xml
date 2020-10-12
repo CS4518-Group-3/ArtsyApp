@@ -177,8 +177,9 @@
             android:orientation="horizontal">
             <ImageView
                 android:id="@+id/profilePic"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/default_account"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="20dp"/>
             <TextView
