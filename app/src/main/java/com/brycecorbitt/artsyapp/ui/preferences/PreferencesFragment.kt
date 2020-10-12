@@ -74,13 +74,13 @@ class PreferencesFragment : Fragment() {
                 miSlider.visibility = View.VISIBLE
                 kmSlider.visibility = View.GONE
                 locationTextView.text = "Select your location radius for posts (mi):"
-                settingsViewModel.setIsCurrentUnitMiles(true)
+                settingsViewModel.setCurrentUnit("mi")
                 settingsViewModel.setRadius(miSlider.value)
             } else {
                 miSlider.visibility = View.GONE
                 kmSlider.visibility = View.VISIBLE
                 locationTextView.text = "Select your location radius for posts (km):"
-                settingsViewModel.setIsCurrentUnitMiles(false)
+                settingsViewModel.setCurrentUnit("km")
                 settingsViewModel.setRadius(kmSlider.value)
             }
         }
@@ -114,8 +114,8 @@ class PreferencesFragment : Fragment() {
         if(requestCode == LOCATIONPICKERREQUEST) {
             try {
                 if(data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
-                    settingsViewModel.setLat(data.getDoubleExtra(MapUtility.LATITUDE, 0.0))
-                    settingsViewModel.setLong(data.getDoubleExtra(MapUtility.LONGITUDE, 0.0))
+                    settingsViewModel.setLat(data.getFloatExtra(MapUtility.LATITUDE, 0.0F))
+                    settingsViewModel.setLong(data.getFloatExtra(MapUtility.LONGITUDE, 0.0F))
                     var s: String? = data.getBundleExtra("fullAddress").getString("city")
                     if (s != null) {
                         settingsViewModel.setLocationButtonText(s)
