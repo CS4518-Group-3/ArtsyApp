@@ -5,6 +5,4 @@
     <string name="title_canvas">Canvas</string>
     <string name="title_account">Account</string>
     <string name="title_login">Login</string>
-    <string name="your_api_key"></string>
-    <string name="web_oauth_clientid"></string>
 </resources>
