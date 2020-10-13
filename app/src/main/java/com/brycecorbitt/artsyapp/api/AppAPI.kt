@@ -6,10 +6,10 @@ import retrofit2.http.*
 interface AppAPI {
     //AUTH ENDPOINTS
     @GET("/auth/callback")
-    fun authenticate(@Query("id_token") id_token: String): Call<AuthenticationResponse>
+    fun authenticate(@Query("id_token") id_token: String): Call<AuthenticationResponse?>
 
     @GET("/auth/check")
-    fun checkIfAuthenticated(): Call<AuthenticationResponse>
+    fun checkIfAuthenticated(): Call<AuthenticationResponse?>
 
     @DELETE("/auth/account")
     fun deleteAccount(): Call<String>
@@ -25,7 +25,7 @@ interface AppAPI {
     @POST("/post")
     fun createPost(@Query("lat") lat: Float?,
                    @Query("lon") lon: Float?/*,
-                   @Query("content") content: content?*/): Call<String>
+                   @Query("content") content: content?*/): Call<Post>
 
     @DELETE("/post/:id")
     fun deletePost(@Query("id") id: String?): Call<String>

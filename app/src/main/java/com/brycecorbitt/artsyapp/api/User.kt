@@ -19,7 +19,7 @@ class User {
     lateinit var name: String
 
     @SerializedName("profile_url")
-    lateinit var profile_url: String
+    var profile_url: String? = null
 
     @SerializedName("updated_at")
     lateinit var updated_at: String

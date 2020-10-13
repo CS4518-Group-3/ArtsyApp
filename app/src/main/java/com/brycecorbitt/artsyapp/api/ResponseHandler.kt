@@ -22,17 +22,17 @@ class ResponseHandler {
         appAPI = retrofit.create(AppAPI::class.java)
     }
 
-    fun authenticate(tokenId: String): LiveData<AuthenticationResponse> {
-        val responseLiveData: MutableLiveData<AuthenticationResponse> = MutableLiveData()
-        val appRequest: Call<AuthenticationResponse> = appAPI.authenticate(tokenId)
-        appRequest.enqueue(object : Callback<AuthenticationResponse> {
-            override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
+    fun authenticate(tokenId: String): LiveData<AuthenticationResponse?> {
+        val responseLiveData: MutableLiveData<AuthenticationResponse?> = MutableLiveData()
+        val appRequest: Call<AuthenticationResponse?> = appAPI.authenticate(tokenId)
+        appRequest.enqueue(object : Callback<AuthenticationResponse?> {
+            override fun onFailure(call: Call<AuthenticationResponse?>, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<AuthenticationResponse>,
-                response: Response<AuthenticationResponse>
+                call: Call<AuthenticationResponse?>,
+                response: Response<AuthenticationResponse?>
             ) {
                 val item: AuthenticationResponse? = response.body()
                 responseLiveData.value = item
@@ -41,17 +41,17 @@ class ResponseHandler {
         return responseLiveData
     }
 
-    fun checkIfAuthenticated(): LiveData<AuthenticationResponse> {
-        val responseLiveData: MutableLiveData<AuthenticationResponse> = MutableLiveData()
-        val appRequest: Call<AuthenticationResponse> = appAPI.checkIfAuthenticated()
-        appRequest.enqueue(object : Callback<AuthenticationResponse> {
-            override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
+    fun checkIfAuthenticated(): LiveData<AuthenticationResponse?> {
+        val responseLiveData: MutableLiveData<AuthenticationResponse?> = MutableLiveData()
+        val appRequest: Call<AuthenticationResponse?> = appAPI.checkIfAuthenticated()
+        appRequest.enqueue(object : Callback<AuthenticationResponse?> {
+            override fun onFailure(call: Call<AuthenticationResponse?>, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<AuthenticationResponse>,
-                response: Response<AuthenticationResponse>
+                call: Call<AuthenticationResponse?>,
+                response: Response<AuthenticationResponse?>
             ) {
                 val item: AuthenticationResponse? = response.body()
                 responseLiveData.value = item

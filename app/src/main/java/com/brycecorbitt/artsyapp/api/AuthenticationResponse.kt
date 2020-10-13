@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 class AuthenticationResponse {
     @SerializedName("authenticated")
-    var authenticated: Boolean = false
+    var authenticated: Boolean? = false
 
     @SerializedName("user")
-    lateinit var user: User
+    var user: User? = null
 }
