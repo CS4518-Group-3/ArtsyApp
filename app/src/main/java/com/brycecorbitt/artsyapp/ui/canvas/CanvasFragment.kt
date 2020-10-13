@@ -45,7 +45,7 @@ class CanvasFragment : Fragment() {
             CanvasView.pathList.removeAt(CanvasView.pathList.size - 1)
             canvasView.invalidate()
         }
-        colorBar.setOnSeekBarChangeListener(object :
+        lightBar.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
                 // write custom code for progress is changed
@@ -60,7 +60,7 @@ class CanvasFragment : Fragment() {
                 //Toast.makeText(activity,"Hue is: " + (seek.progress / 100 * 360)+ ".", Toast.LENGTH_SHORT).show()
                 val floatarray : FloatArray = FloatArray(3)
                 // Hue
-                floatarray[0] = (seek.progress* 3.6).toFloat()
+                floatarray[0] = CanvasView.templatePaint.color
                 // Saturation
                 floatarray[1] = 1f
                 // Value
