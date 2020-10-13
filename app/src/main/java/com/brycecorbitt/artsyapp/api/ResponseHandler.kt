@@ -60,7 +60,7 @@ class ResponseHandler {
         return responseLiveData
     }
 
-    fun deletePost(): LiveData<String> {
+    fun deleteAccount(): LiveData<String> {
         val responseLiveData: MutableLiveData<String> = MutableLiveData()
         val appRequest: Call<String> = appAPI.deleteAccount()
         appRequest.enqueue(object : Callback<String> {
@@ -89,6 +89,114 @@ class ResponseHandler {
             override fun onResponse(
                 call: Call<String>,
                 response: Response<String>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+    fun createPost(lat: Float?, lon: Float, content: String?): LiveData<Post> {
+        val responseLiveData: MutableLiveData<Post> = MutableLiveData()
+        val appRequest: Call<Post> = appAPI.createPost(lat, lon, content)
+        appRequest.enqueue(object : Callback<Post> {
+            override fun onFailure(call: Call<Post>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<Post>,
+                response: Response<Post>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+    fun deletePost(id: String?): LiveData<String> {
+        val responseLiveData: MutableLiveData<String> = MutableLiveData()
+        val appRequest: Call<String> = appAPI.deletePost(id)
+        appRequest.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<String>,
+                response: Response<String>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+    fun upvote(id: String?): LiveData<String> {
+        val responseLiveData: MutableLiveData<String> = MutableLiveData()
+        val appRequest: Call<String> = appAPI.upvote(id)
+        appRequest.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<String>,
+                response: Response<String>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+    fun downvote(id: String?): LiveData<String> {
+        val responseLiveData: MutableLiveData<String> = MutableLiveData()
+        val appRequest: Call<String> = appAPI.downvote(id)
+        appRequest.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<String>,
+                response: Response<String>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+    fun getPost(id: String?): LiveData<Post> {
+        val responseLiveData: MutableLiveData<Post> = MutableLiveData()
+        val appRequest: Call<Post> = appAPI.getPost(id)
+        appRequest.enqueue(object : Callback<Post> {
+            override fun onFailure(call: Call<Post>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<Post>,
+                response: Response<Post>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+    fun getFeed(lat: Float, lon: Float, radius: Number, unit: String, sort_by: String?, page: Int?, limit: Int?): LiveData<Array<Post>> {
+        val responseLiveData: MutableLiveData<Array<Post>> = MutableLiveData()
+        val appRequest: Call<Array<Post>> = appAPI.getFeed(lat, lon, radius, unit, sort_by, page, limit)
+        appRequest.enqueue(object : Callback<Array<Post>> {
+            override fun onFailure(call: Call<Array<Post>>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<Array<Post>>,
+                response: Response<Array<Post>>
             ) {
                 responseLiveData.value = response.body()
             }

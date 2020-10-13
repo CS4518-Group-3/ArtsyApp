@@ -2,9 +2,9 @@ package com.brycecorbitt.artsyapp.api
 
 import com.google.gson.annotations.SerializedName
 
-class Post {
-    @SerializedName("content")
-    lateinit var content: String
+class Post(lat: Float?, lon: Float?/*, content: content?*/) {
+    /*@SerializedName("content")
+    lateinit var content: String*/
 
     @SerializedName("created_at")
     var created_at: String? = null

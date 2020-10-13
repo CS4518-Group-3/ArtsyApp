@@ -18,14 +18,13 @@ interface AppAPI {
     fun signOut(): Call<String>
 
 
-
-
-
     //POST ENDPOINTS
     @POST("/post")
-    fun createPost(@Query("lat") lat: Float?,
-                   @Query("lon") lon: Float?/*,
-                   @Query("content") content: content?*/): Call<Post>
+    fun createPost(
+        @Query("lat") lat: Float?,
+        @Query("lon") lon: Float?,
+                   @Query("content") content: String?
+    ): Call<Post>
 
     @DELETE("/post/:id")
     fun deletePost(@Query("id") id: String?): Call<String>
@@ -37,15 +36,17 @@ interface AppAPI {
     fun downvote(@Query("id") id: String?): Call<String>
 
     @GET("/post/:id")
-    fun getPost(@Query("id") id: String?): Call<String>
+    fun getPost(@Query("id") id: String?): Call<Post>
 
     @GET("/post/feed")
-    fun getFeed(@Query("lat") lat: Float,
-                @Query("lon") lon: Float,
-                @Query("radius") radius: Number,
-                @Query("unit") unit: String,
-                @Query("sort_by") sort_by: String?,
-                @Query("page") page: Int?,
-                @Query("limit") limit: Int?): Call<String>
+    fun getFeed(
+        @Query("lat") lat: Float,
+        @Query("lon") lon: Float,
+        @Query("radius") radius: Number,
+        @Query("unit") unit: String,
+        @Query("sort_by") sort_by: String?,
+        @Query("page") page: Int?,
+        @Query("limit") limit: Int?
+    ): Call<Array<Post>>
 
 }
