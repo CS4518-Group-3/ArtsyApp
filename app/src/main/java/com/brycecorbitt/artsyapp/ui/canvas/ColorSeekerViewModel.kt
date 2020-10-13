@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class CanvasViewModel : ViewModel() {
+class ColorSeekerViewModel : ViewModel() {
 
-//    private val _text = MutableLiveData<String>().apply {
+//    private val _currentPaint = MutableLiveData<Paint>().apply {
 //        value = "This is canvas Fragment"
 //    }
-    var currentPaint: Paint = Paint()
+//    val text: LiveData<String> = _text
 
 }

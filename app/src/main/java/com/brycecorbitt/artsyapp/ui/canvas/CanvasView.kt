@@ -9,13 +9,12 @@ import android.view.MotionEvent
 import android.view.View
 
 class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context, attributeSet) {
-    val path: Path = Path()
-    val paint: Paint = Paint()
-    init {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 10F
-    }
 
+    init {
+        Companion.templatePaint.style = Paint.Style.STROKE
+        Companion.templatePaint.strokeWidth = 10F
+    }
+    
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         var returnBool = super.onTouchEvent(event)
@@ -23,8 +22,18 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
             val x = event.x
             val y = event.y
             when(event.action) {
-                MotionEvent.ACTION_DOWN -> {path.moveTo(x, y); returnBool = true}
-                MotionEvent.ACTION_MOVE -> {path.lineTo(x, y); returnBool = true}
+                MotionEvent.ACTION_DOWN -> {
+                    val path = Path()
+                    val paint = Paint(Companion.templatePaint)
+                    path.moveTo(x, y)
+                    Companion.pathList.add(path)
+                    Companion.paintList.add(paint)
+                    returnBool = true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    Companion.pathList[(Companion.pathList.size - 1)].lineTo(x, y)
+                    returnBool = true
+                }
                 else -> returnBool = false
             }
 
@@ -35,7 +44,17 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawPath(path, paint)
+        for (x in 0 until Companion.pathList.size){
+            canvas?.drawPath(Companion.pathList[x], Companion.paintList[x])
+        }
+
         //path.reset()
+    }
+
+    companion object {
+        val templatePaint : Paint = Paint()
+        val pathList: ArrayList<Path> = ArrayList()
+        val paintList: ArrayList<Paint> = ArrayList()
+
     }
 }
