@@ -1,6 +1,7 @@
 package com.brycecorbitt.artsyapp.api
 
 import android.content.Context
+import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -17,9 +18,10 @@ class HeaderInterceptor(context: Context) : Interceptor {
                 .build()
         } else {
             request = original.newBuilder()
-                .addHeader("Set-Cookie", cookie)
+                .addHeader("Cookie", cookie)
                 .build()
         }
+        Log.d(TAG, "${request.header("Cookie")}")
         return chain.proceed(request)
     }
 }

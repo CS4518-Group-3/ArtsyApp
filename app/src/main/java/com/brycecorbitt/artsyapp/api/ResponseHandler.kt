@@ -47,10 +47,9 @@ class ResponseHandler(context: Context) {
             ) {
                 val item: AuthenticationResponse? = response.body()
                 responseLiveData.value = item
+                val cookie: String? = response.headers().get("Set-Cookie")
                 var editor = preferences?.editor
-                var gson = Gson()
-                var str = gson.toJson(item)
-                editor?.putString("cookie", str)
+                editor?.putString("cookie", cookie)
                 editor?.commit()
 
             }
