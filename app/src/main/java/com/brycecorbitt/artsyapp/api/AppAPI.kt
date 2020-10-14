@@ -6,7 +6,9 @@ import retrofit2.http.*
 interface AppAPI {
     //AUTH ENDPOINTS
     @GET("/auth/callback")
-    fun authenticate(@Query("id_token") id_token: String): Call<AuthenticationResponse?>
+    fun authenticate(
+        @Query("id_token") id_token: String
+    ): Call<AuthenticationResponse?>
 
     @GET("/auth/check")
     fun checkIfAuthenticated(): Call<AuthenticationResponse?>

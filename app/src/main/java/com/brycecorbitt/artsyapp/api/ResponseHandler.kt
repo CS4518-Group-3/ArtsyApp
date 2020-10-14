@@ -1,8 +1,12 @@
 package com.brycecorbitt.artsyapp.api
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,12 +15,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val TAG = "ResponseHandler"
 
-class ResponseHandler {
+class ResponseHandler(context: Context) {
     private val appAPI: AppAPI
+    private var preferences = Pref.get(context)
 
     init {
+        val client = OkHttpClient().newBuilder()
+        client.addInterceptor(HeaderInterceptor(context))
+        val logging = HttpLoggingInterceptor()
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS)
+        client.addInterceptor(logging)
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl("http://mbsr.wpi.edu:6567")
+            .client(client.build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         appAPI = retrofit.create(AppAPI::class.java)
@@ -36,6 +47,12 @@ class ResponseHandler {
             ) {
                 val item: AuthenticationResponse? = response.body()
                 responseLiveData.value = item
+                var editor = preferences?.editor
+                var gson = Gson()
+                var str = gson.toJson(item)
+                editor?.putString("cookie", str)
+                editor?.commit()
+
             }
         })
         return responseLiveData
