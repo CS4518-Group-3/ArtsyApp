@@ -1,13 +1,16 @@
 package com.brycecorbitt.artsyapp.ui.feed
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.brycecorbitt.artsyapp.PostTemp
 
 class FeedViewModel : ViewModel() {
+    val posts = ArrayList<PostTemp>()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is feed Fragment"
+    init {
+        for (i in 0 until 100) {
+            val post = PostTemp()
+            post.index = i
+            posts += post
+        }
     }
-    val text: LiveData<String> = _text
 }
