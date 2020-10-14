@@ -21,7 +21,6 @@ class HeaderInterceptor(context: Context) : Interceptor {
                 .addHeader("Cookie", cookie)
                 .build()
         }
-        Log.d(TAG, "${request.header("Cookie")}")
         return chain.proceed(request)
     }
 }
