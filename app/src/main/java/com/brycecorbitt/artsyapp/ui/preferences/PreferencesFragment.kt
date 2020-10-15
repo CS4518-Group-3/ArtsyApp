@@ -1,21 +1,24 @@
 package com.brycecorbitt.artsyapp.ui.preferences
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import com.brycecorbitt.artsyapp.MainActivity
 import com.brycecorbitt.artsyapp.R
+import com.brycecorbitt.artsyapp.api.ResponseHandler
+import com.brycecorbitt.artsyapp.api.User
 import com.google.android.material.slider.Slider
 import com.shivtechs.maplocationpicker.LocationPickerActivity
 import com.shivtechs.maplocationpicker.MapUtility
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_preferences.*
-import java.lang.Exception
 
 const val LOCATIONPICKERREQUEST = 2
 
@@ -35,16 +38,20 @@ class PreferencesFragment : Fragment() {
     private lateinit var logout: Button
     private lateinit var deleteAccount: Button
     private lateinit var emailTextView: TextView
+    private lateinit var profilePic: ImageView
+    private var user = User.get()
+    private var appCaller: ResponseHandler = ResponseHandler(context)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapUtility.apiKey = resources.getString(R.string.your_api_key)
     }
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         settingsViewModel = PreferencesViewModel.get()
         val root = inflater.inflate(R.layout.fragment_preferences, container, false)
@@ -60,9 +67,10 @@ class PreferencesFragment : Fragment() {
         locationTextView = root.findViewById(R.id.locationRadiusTextView)
         logout = root.findViewById(R.id.logoutButton)
         deleteAccount = root.findViewById(R.id.deleteAccountButton)
+        profilePic = root.findViewById(R.id.profilePic)
         emailTextView = root.findViewById(R.id.emailTextView)
-
-        emailTextView.text = "xxxxx@gmail.com"
+        emailTextView.text = user.email
+        Picasso.get().load(user.profile_url).into(profilePic)
         locationButton.text = settingsViewModel.currentLocationButtonText
         return root
     }
@@ -70,7 +78,7 @@ class PreferencesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         unitRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
-            if(i == R.id.milesRadio) {
+            if (i == R.id.milesRadio) {
                 miSlider.visibility = View.VISIBLE
                 kmSlider.visibility = View.GONE
                 locationTextView.text = "Select your location radius for posts (mi):"
@@ -91,19 +99,29 @@ class PreferencesFragment : Fragment() {
             settingsViewModel.setRadius(value)
         }
         sortRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
-            if(i == R.id.locationRadio) {
+            if (i == R.id.locationRadio) {
                 settingsViewModel.setIsCurrentSortLocation(true)
             } else {
                 settingsViewModel.setIsCurrentSortLocation(false)
             }
         }
         logoutButton.setOnClickListener {
-            //
+            appCaller.signOut()
+            val activity: Activity? = activity
+            if (activity is MainActivity) {
+                val myactivity: MainActivity? = activity
+                myactivity?.showLogin()
+            }
         }
         deleteAccount.setOnClickListener {
-            //
+            appCaller.deleteAccount()
+            val activity: Activity? = activity
+            if (activity is MainActivity) {
+                val myactivity: MainActivity? = activity
+                myactivity?.showLogin()
+            }
         }
-        locationButton.setOnClickListener{
+        locationButton.setOnClickListener {
             val i: Intent = Intent(activity, LocationPickerActivity::class.java)
             startActivityForResult(i, LOCATIONPICKERREQUEST)
         }
@@ -111,9 +129,9 @@ class PreferencesFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == LOCATIONPICKERREQUEST) {
+        if (requestCode == LOCATIONPICKERREQUEST) {
             try {
-                if(data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+                if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
                     settingsViewModel.setLat(data.getFloatExtra(MapUtility.LATITUDE, 0.0F))
                     settingsViewModel.setLong(data.getFloatExtra(MapUtility.LONGITUDE, 0.0F))
                     var s: String? = data.getBundleExtra("fullAddress").getString("city")

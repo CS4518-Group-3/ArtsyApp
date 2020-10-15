@@ -14,10 +14,10 @@ interface AppAPI {
     fun checkIfAuthenticated(): Call<AuthenticationResponse?>
 
     @DELETE("/auth/account")
-    fun deleteAccount(): Call<String>
+    fun deleteAccount(): Call<Void>
 
     @GET("/auth/signout")
-    fun signOut(): Call<String>
+    fun signOut(): Call<Void>
 
 
     //POST ENDPOINTS
@@ -49,6 +49,12 @@ interface AppAPI {
         @Query("sort_by") sort_by: String?,
         @Query("page") page: Int?,
         @Query("limit") limit: Int?
-    ): Call<Array<Post>>
+    ): Call<List<Post>>
+
+    @GET("/post/user")
+    fun getUserFeed(
+        @Query("page") page: Int?,
+        @Query("limit") limit: Int?
+    ): Call<List<Post>>
 
 }

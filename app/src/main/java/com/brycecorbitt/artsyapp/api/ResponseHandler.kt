@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -15,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val TAG = "ResponseHandler"
 
-class ResponseHandler(context: Context) {
+class ResponseHandler(context: Context?) {
     private val appAPI: AppAPI
     private var preferences = Pref.get(context)
 
@@ -46,8 +45,8 @@ class ResponseHandler(context: Context) {
                 response: Response<AuthenticationResponse?>
             ) {
                 val item: AuthenticationResponse? = response.body()
-                var user: User? = User.get()
-                user = item?.user!!
+                var user: User = User.get()
+                user.set(item?.user!!)
                 responseLiveData.value = item
                 val cookie: String? = response.headers().get("Set-Cookie")
                 var editor = preferences?.editor
@@ -78,35 +77,37 @@ class ResponseHandler(context: Context) {
         return responseLiveData
     }
 
-    fun deleteAccount(): LiveData<String> {
-        val responseLiveData: MutableLiveData<String> = MutableLiveData()
-        val appRequest: Call<String> = appAPI.deleteAccount()
-        appRequest.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+    fun deleteAccount(): LiveData<Void> {
+        val responseLiveData: MutableLiveData<Void> = MutableLiveData()
+        val appRequest: Call<Void> = appAPI.deleteAccount()
+        appRequest.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
+                call: Call<Void>,
+                response: Response<Void>
             ) {
                 responseLiveData.value = response.body()
+                var editor = preferences?.editor
+                editor?.clear()?.commit()
             }
         })
         return responseLiveData
     }
 
-    fun signOut(): LiveData<String> {
-        val responseLiveData: MutableLiveData<String> = MutableLiveData()
-        val appRequest: Call<String> = appAPI.signOut()
-        appRequest.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+    fun signOut(): LiveData<Void> {
+        val responseLiveData: MutableLiveData<Void> = MutableLiveData()
+        val appRequest: Call<Void> = appAPI.signOut()
+        appRequest.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
+                call: Call<Void>,
+                response: Response<Void>
             ) {
                 responseLiveData.value = response.body()
             }
@@ -204,17 +205,36 @@ class ResponseHandler(context: Context) {
         return responseLiveData
     }
 
-    fun getFeed(lat: Float, lon: Float, radius: Number, unit: String, sort_by: String?, page: Int?, limit: Int?): LiveData<Array<Post>> {
-        val responseLiveData: MutableLiveData<Array<Post>> = MutableLiveData()
-        val appRequest: Call<Array<Post>> = appAPI.getFeed(lat, lon, radius, unit, sort_by, page, limit)
-        appRequest.enqueue(object : Callback<Array<Post>> {
-            override fun onFailure(call: Call<Array<Post>>, t: Throwable) {
+    fun getFeed(lat: Float, lon: Float, radius: Number, unit: String, sort_by: String?, page: Int?, limit: Int?): LiveData<List<Post>> {
+        val responseLiveData: MutableLiveData<List<Post>> = MutableLiveData()
+        val appRequest: Call<List<Post>> = appAPI.getFeed(lat, lon, radius, unit, sort_by, page, limit)
+        appRequest.enqueue(object : Callback<List<Post>> {
+            override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<Array<Post>>,
-                response: Response<Array<Post>>
+                call: Call<List<Post>>,
+                response: Response<List<Post>>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+
+    fun getUserFeed(page: Int?, limit: Int?): LiveData<List<Post>> {
+        val responseLiveData: MutableLiveData<List<Post>> = MutableLiveData()
+        val appRequest: Call<List<Post>> = appAPI.getUserFeed(page, limit)
+        appRequest.enqueue(object : Callback<List<Post>> {
+            override fun onFailure(call: Call<List<Post>>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<List<Post>>,
+                response: Response<List<Post>>
             ) {
                 responseLiveData.value = response.body()
             }
