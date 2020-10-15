@@ -12,14 +12,32 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.brycecorbitt.artsyapp.MainActivity
 import com.brycecorbitt.artsyapp.R
+import com.brycecorbitt.artsyapp.api.AuthenticationResponse
+import com.brycecorbitt.artsyapp.api.Post
+import com.brycecorbitt.artsyapp.api.ResponseHandler
+import com.brycecorbitt.artsyapp.api.User
+import kotlinx.android.synthetic.main.fragment_canvas.*
 import java.io.ByteArrayOutputStream
 
 
 class CanvasFragment : Fragment() {
 
-    private lateinit var canvasViewModel: CanvasViewModel
+    private val canvasViewModel: CanvasViewModel by lazy {
+    ViewModelProviders.of(this).get(CanvasViewModel::class.java)
+    }
+
+    private lateinit var apiCall: ResponseHandler
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,9 +45,12 @@ class CanvasFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        canvasViewModel =
-            ViewModelProviders.of(this).get(CanvasViewModel::class.java)
 
+        apiCall = ResponseHandler(activity?.applicationContext)
+
+
+
+        lateinit var submitResponse : LiveData<Post>
 
         val root = inflater.inflate(R.layout.fragment_canvas, container, false)
         //val textView: TextView = root.findViewById(R.id.text_canvas)
@@ -68,8 +89,24 @@ class CanvasFragment : Fragment() {
                 //Toast.makeText(activity?.applicationContext, encoded, Toast.LENGTH_SHORT).show()
 
             Toast.makeText(activity?.applicationContext, encoded, Toast.LENGTH_SHORT).show()
-
+            val base64String : String = convertBitmap(canvasView.getDrawingCache())
+            //submitResponse = ResponseHandler(activity?.applicationContext).createPost(42.273828f, -71.809759f, base64String)
+            val response: LiveData<Post> = apiCall.createPost(42.273828f, -71.809759f, base64String)
+            response.observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    findNavController().navigate(R.id.navigation_account)
+                    //item ->
+//                if (!item?.!!) {
+//                    showLogin()
+//                } else {
+//
+//                }
+                }
+            )
         }
+
+
         colorBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {

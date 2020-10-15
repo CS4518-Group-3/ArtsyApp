@@ -1,10 +1,7 @@
 package com.brycecorbitt.artsyapp.ui.canvas
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -15,8 +12,10 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
         Companion.templatePaint.style = Paint.Style.STROKE
         Companion.templatePaint.strokeWidth = 10F
         Companion.templatePaint.color = Color.RED
+        this.isDrawingCacheEnabled = true;
     }
-    var lastCanvas : Canvas = Canvas()
+
+
     
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -50,9 +49,10 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
         for (x in 0 until Companion.pathList.size){
             canvas?.drawPath(Companion.pathList[x], Companion.paintList[x])
         }
-        if (canvas != null) {
-            lastCanvas = canvas
-        }
+//        if (canvas != null) {
+//            lastCanvas = canvas
+//        }
+
 
 
         //path.reset()

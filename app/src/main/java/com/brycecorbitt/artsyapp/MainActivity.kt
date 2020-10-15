@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         // init Google Authentication Class
         auth = GoogleAuth(this, getString(R.string.web_oauth_clientid))
         apiCaller = ResponseHandler(this)
-        val response: LiveData<AuthenticationResponse?> = apiCaller.checkIfAuthenticated()
+            val response: LiveData<AuthenticationResponse?> = apiCaller.checkIfAuthenticated()
         response.observe(
             this,
             Observer { item ->
@@ -111,6 +111,14 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         navController.navigate(R.id.navigation_login)
     }
+//    public fun goToAccount() {
+//        // Hide Navigation bar
+////        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+////        navView.visibility = View.GONE
+//        // Programmatically navigate to login screen
+//        val navController = findNavController(R.id.nav_host_fragment)
+//        navController.navigate(R.id.navigation_account)
+//    }
 
     private fun hideLogin() {
         // Programmatically navigate to home (feed) screen
