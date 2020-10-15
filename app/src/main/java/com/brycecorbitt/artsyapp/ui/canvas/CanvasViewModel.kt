@@ -29,6 +29,17 @@ class CanvasViewModel : ViewModel() {
     fun getColor() : Int{
         return Color.HSVToColor(hsv)
     }
+    fun getColorOnly() : Int{
+        val hsvCopy = hsv.clone()
+        hsvCopy[2] = 1f
+        return Color.HSVToColor(hsvCopy)
+        return Color.HSVToColor(hsv)
+    }
+    fun getWhiteBlack() : Int{
+        val hsvCopy = hsv.clone()
+        hsvCopy[1] = 0f
+        return Color.HSVToColor(hsvCopy)
+    }
     var currentPaint: Paint = Paint()
     var barProgress = 0;
 

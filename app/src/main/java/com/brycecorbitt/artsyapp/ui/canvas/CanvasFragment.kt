@@ -56,6 +56,7 @@ class CanvasFragment : Fragment() {
             override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
                 CanvasView.templatePaint.color = canvasViewModel.setPaintHue(seek.progress.toFloat())
                 colorIndicator.setBackgroundColor(canvasViewModel.getColor())
+                seek.thumb.setTint((canvasViewModel.getColorOnly()))
             }
             override fun onStartTrackingTouch(seek: SeekBar) { }
             override fun onStopTrackingTouch(seek: SeekBar) {
@@ -67,6 +68,7 @@ class CanvasFragment : Fragment() {
                 override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
                     CanvasView.templatePaint.color = canvasViewModel.setPaintVal(seek.progress.toFloat() / 100f)
                     colorIndicator.setBackgroundColor(canvasViewModel.getColor())
+                    seek.thumb.setTint((canvasViewModel.getWhiteBlack()))
                 }
                 override fun onStartTrackingTouch(seek: SeekBar) { }
                 override fun onStopTrackingTouch(seek: SeekBar) {
