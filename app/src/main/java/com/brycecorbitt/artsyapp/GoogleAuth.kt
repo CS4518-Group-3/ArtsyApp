@@ -42,8 +42,8 @@ class GoogleAuth(private val activity: MainActivity, web_client_id: String?) {
                 .requestIdToken(web_client_id)
                 .requestEmail()
                 .build()
-            signInClient = GoogleSignIn.getClient(activity, gso!!)
-            account = GoogleSignIn.getLastSignedInAccount(activity)!!
+            signInClient = GoogleSignIn.getClient(activity, gso)
+            account = GoogleSignIn.getLastSignedInAccount(activity)
         }
 
     }
