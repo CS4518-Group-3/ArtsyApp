@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import java.lang.IllegalStateException
 
 class PreferencesViewModel private constructor(context: Context) : ViewModel() {
-    private var unit: String = "mi"
-    private var radius: Float = 5F
-    private var sortBy: String = "proximity"
+        private var unit: String = "mi"
+        private var radius: Float = 5F
+        private var sortBy: String = "proximity"
     private var lat: Float = 0.0F //user's location later
     private var lon: Float = 0.0F //user's location later
     private var locationButtonText: String = "Enter a Location:"
