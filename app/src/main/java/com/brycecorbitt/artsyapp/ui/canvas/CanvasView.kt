@@ -16,6 +16,7 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
         Companion.templatePaint.strokeWidth = 10F
         Companion.templatePaint.color = Color.RED
     }
+    var lastCanvas : Canvas = Canvas()
     
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -49,6 +50,10 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
         for (x in 0 until Companion.pathList.size){
             canvas?.drawPath(Companion.pathList[x], Companion.paintList[x])
         }
+        if (canvas != null) {
+            lastCanvas = canvas
+        }
+
 
         //path.reset()
     }

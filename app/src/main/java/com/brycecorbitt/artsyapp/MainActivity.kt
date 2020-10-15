@@ -1,6 +1,13 @@
 package com.brycecorbitt.artsyapp
 
+import android.app.Activity
+import android.graphics.Bitmap
+import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.view.PixelCopy
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -26,4 +33,5 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
 }
