@@ -27,6 +27,16 @@ class User {
     @SerializedName("updated_at")
     lateinit var updated_at: String
 
+    fun set(user: User) {
+        this.created_at = user.created_at
+        this.email = user.email
+        this.google_id = user.google_id
+        this.id = user.id
+        this.updated_at = user.updated_at
+        this.name = user.name
+        this.profile_url = user.profile_url
+    }
+
     companion object {
         private var INSTANCE: User? = null
 

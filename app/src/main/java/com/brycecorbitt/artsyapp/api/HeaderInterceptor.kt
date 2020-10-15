@@ -7,7 +7,7 @@ import okhttp3.Request
 import okhttp3.Response
 
 
-class HeaderInterceptor(context: Context) : Interceptor {
+class HeaderInterceptor(context: Context?) : Interceptor {
     private var preferences: Pref? = Pref.get(context)
     override fun intercept(chain: Interceptor.Chain): Response {
         var cookie = preferences?.sharedPreferences?.getString("cookie", "")
