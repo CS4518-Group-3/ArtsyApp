@@ -45,8 +45,6 @@ class ResponseHandler(context: Context?) {
                 response: Response<AuthenticationResponse?>
             ) {
                 val item: AuthenticationResponse? = response.body()
-                var user: User = User.get()
-                user.set(item?.user!!)
                 responseLiveData.value = item
                 val cookie: String? = response.headers().get("Set-Cookie")
                 var editor = preferences?.editor

@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 Observer { item ->
                     if (item?.authenticated!!) {
                         var user = User.get()
-                        user = item.user!!
+                        user.set(item.user!!)
                         hideLogin()
                     }
                 }

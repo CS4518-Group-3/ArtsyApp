@@ -39,13 +39,14 @@ class PreferencesFragment : Fragment() {
     private lateinit var deleteAccount: Button
     private lateinit var emailTextView: TextView
     private lateinit var profilePic: ImageView
-    private var user = User.get()
+    private lateinit var user: User
     private var appCaller: ResponseHandler = ResponseHandler(context)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapUtility.apiKey = resources.getString(R.string.your_api_key)
+        user = User.get()
     }
 
     override fun onCreateView(
