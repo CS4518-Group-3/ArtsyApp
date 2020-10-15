@@ -7,30 +7,30 @@ import androidx.lifecycle.ViewModel
 import java.lang.IllegalStateException
 
 class PreferencesViewModel private constructor(context: Context) : ViewModel() {
-    private var unit: String = "mi"
-    private var radius: Float = 5F
-    private var isLocation: Boolean = true
+        private var unit: String = "mi"
+        private var radius: Float = 5F
+        private var sortBy: String = "proximity"
     private var lat: Float = 0.0F //user's location later
-    private var long: Float = 0.0F //user's location later
+    private var lon: Float = 0.0F //user's location later
     private var locationButtonText: String = "Enter a Location:"
 
-    val isCurrentUnitMiles: String
+    val currentUnit: String
         get() = unit
-    val isCurrentSortLocation: Boolean
-        get() = isLocation
+    val CurrentSortType: String
+        get() = sortBy
     val currentRadius: Float
         get() = radius
     val currentLat: Float
         get() = lat
-    val currentLong: Float
-        get() = long
+    val currentLon: Float
+        get() = lon
     val currentLocationButtonText: String
         get() = locationButtonText
     fun setCurrentUnit(u: String) { unit = u }
-    fun setIsCurrentSortLocation(trueOrNah: Boolean) { isLocation = trueOrNah }
+    fun setCurrentSortType(type: String) { sortBy = type }
     fun setRadius(rad: Float) { radius = rad }
     fun setLat(lt: Float) { lat = lt}
-    fun setLong(lg: Float) { long = lg }
+    fun setLong(lg: Float) { lon = lg }
     fun setLocationButtonText(s: String) { locationButtonText = s }
 
     companion object {

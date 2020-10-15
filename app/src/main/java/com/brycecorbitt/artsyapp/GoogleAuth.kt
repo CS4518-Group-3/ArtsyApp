@@ -12,7 +12,7 @@ import com.google.android.gms.common.api.ApiException
 const val RC_SIGN_IN = 25
 private const val TAG = "GoogleAuth"
 class GoogleAuth(private val activity: MainActivity, web_client_id: String?) {
-    private var signInClient: GoogleSignInClient? = null
+    var signInClient: GoogleSignInClient? = null
     var account: GoogleSignInAccount? = null
 
     // Starts Google SignIn activity, prompting user to sign in with Google account
