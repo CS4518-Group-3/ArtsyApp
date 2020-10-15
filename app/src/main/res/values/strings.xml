@@ -4,6 +4,7 @@
     <string name="title_feed">Feed</string>
     <string name="title_canvas">Canvas</string>
     <string name="title_account">Account</string>
+    <string name="title_login">Login</string>
     <string name="button_undo">Undo</string>
     <string name="button_finish">Finish</string>
     <string name="button_clear">Clear</string>
