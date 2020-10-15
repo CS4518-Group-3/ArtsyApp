@@ -37,9 +37,10 @@ class CanvasFragment : Fragment() {
         //base.setContent
         val canvasView: CanvasView = root.findViewById(R.id.canvasView)//CanvasView(this.context)
         val colorBar: SeekBar = root.findViewById(R.id.seekBar)
-        colorBar.max = 320
+
         val lightBar: SeekBar = root.findViewById(R.id.seekBar3)
-        lightBar.progress = 100
+        colorBar.progress = canvasViewModel.colorBarProgress
+        lightBar.progress = canvasViewModel.lightBarProgress
         val clearButton: Button =root.findViewById(R.id.button4)
         val undoButton: Button =root.findViewById(R.id.button5)
         val submitButton: Button =root.findViewById(R.id.button)

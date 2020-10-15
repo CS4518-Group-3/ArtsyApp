@@ -41,7 +41,8 @@ class CanvasViewModel : ViewModel() {
         return Color.HSVToColor(hsvCopy)
     }
     var currentPaint: Paint = Paint()
-    var barProgress = 0;
+    var colorBarProgress = 0;
+    var lightBarProgress = 0;
 
 //    val colorSeeklistener : SeekBar.OnSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
 //        override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
@@ -65,5 +66,7 @@ class CanvasViewModel : ViewModel() {
         hsv[0] = 0f
         hsv[1] = 1f
         hsv[2] = 1f
+//        lightBarProgress = 100
+//        colorBarProgress = 0
     }
 }
