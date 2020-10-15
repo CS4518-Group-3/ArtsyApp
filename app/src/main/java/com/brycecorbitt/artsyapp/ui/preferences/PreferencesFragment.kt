@@ -101,9 +101,9 @@ class PreferencesFragment : Fragment() {
         }
         sortRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
             if (i == R.id.locationRadio) {
-                settingsViewModel.setIsCurrentSortLocation(true)
+                settingsViewModel.setCurrentSortType("proximity")
             } else {
-                settingsViewModel.setIsCurrentSortLocation(false)
+                settingsViewModel.setCurrentSortType("popular")
             }
         }
         logoutButton.setOnClickListener {
