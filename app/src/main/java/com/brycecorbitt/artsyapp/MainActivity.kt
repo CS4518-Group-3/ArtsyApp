@@ -8,12 +8,15 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.brycecorbitt.artsyapp.api.Pref
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+    var pref: Pref? = null
     private lateinit var auth: GoogleAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        pref = Pref(this)
         super.onCreate(savedInstanceState)
         // TODO: Make /auth/check API call here to check if user has valid session cookie already.
         // init Google Authentication Class
