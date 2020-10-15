@@ -15,6 +15,10 @@ import com.brycecorbitt.artsyapp.api.Pref
 import com.brycecorbitt.artsyapp.api.ResponseHandler
 import com.brycecorbitt.artsyapp.api.User
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult.TIMEOUT
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -72,21 +76,30 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val token = auth.account?.idToken
-        if (requestCode == RC_SIGN_IN) {
-            auth.authenticate(data!!)
-            val response: LiveData<AuthenticationResponse?> = apiCaller.authenticate(token!!)
-            response.observe(
-                this,
-                Observer { item ->
-                    if (item?.authenticated!!) {
-                        var user = User.get()
-                        user.set(item.user!!)
-                        hideLogin()
+        if (token != null) {
+            if (requestCode == RC_SIGN_IN) {
+                auth.authenticate(data!!)
+                val response: LiveData<AuthenticationResponse?> = apiCaller.authenticate(token!!)
+                response.observe(
+                    this,
+                    Observer { item ->
+                        if (item?.authenticated!!) {
+                            var user = User.get()
+                            user.set(item.user!!)
+                            hideLogin()
+                        }
                     }
-                }
-            )
-            // After user is authenticated with backend, return to feed (include this function in a callback from API if needed)
-            hideLogin()
+                )
+                // After user is authenticated with backend, return to feed (include this function in a callback from API if needed)
+                hideLogin()
+            }
+        } else {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(R.string.web_oauth_clientid.toString())
+                .requestEmail()
+                .build()
+            auth.signInClient = GoogleSignIn.getClient(this, gso)
+            auth.account = GoogleSignIn.getLastSignedInAccount(this)
         }
     }
 
