@@ -17,6 +17,7 @@ const val TAG = "ResponseHandler"
 class ResponseHandler(context: Context?) {
     private val appAPI: AppAPI
     private var preferences = Pref.get(context)
+    private val geocodeAPI: GeocodeAPI
 
     init {
         val client = OkHttpClient().newBuilder()
@@ -30,6 +31,12 @@ class ResponseHandler(context: Context?) {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         appAPI = retrofit.create(AppAPI::class.java)
+
+        val geoRetrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://us1.locationiq.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        geocodeAPI = geoRetrofit.create(GeocodeAPI::class.java)
     }
 
     fun authenticate(tokenId: String): LiveData<AuthenticationResponse?> {
@@ -233,6 +240,24 @@ class ResponseHandler(context: Context?) {
             override fun onResponse(
                 call: Call<List<Post>>,
                 response: Response<List<Post>>
+            ) {
+                responseLiveData.value = response.body()
+            }
+        })
+        return responseLiveData
+    }
+
+    fun geoAddress(key: String, lat: Float, lon: Float, format: String): LiveData<GeoAddress> {
+        val responseLiveData: MutableLiveData<GeoAddress> = MutableLiveData()
+        val appRequest: Call<GeoAddress> = geocodeAPI.geoAddress(key, lat, lon, format)
+        appRequest.enqueue(object : Callback<GeoAddress> {
+            override fun onFailure(call: Call<GeoAddress>, t: Throwable) {
+                Log.e(TAG, "Failed!", t)
+            }
+
+            override fun onResponse(
+                call: Call<GeoAddress>,
+                response: Response<GeoAddress>
             ) {
                 responseLiveData.value = response.body()
             }
