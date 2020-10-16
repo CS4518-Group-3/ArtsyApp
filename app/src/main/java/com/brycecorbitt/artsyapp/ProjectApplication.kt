@@ -9,6 +9,7 @@ class ProjectApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         PreferencesViewModel.initialize(this)
+        PostRepository.initialize(this)
         User.initialize(this)
     }
 }

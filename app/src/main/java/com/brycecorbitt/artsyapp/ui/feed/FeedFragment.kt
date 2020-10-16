@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation.findNavController
 import com.brycecorbitt.artsyapp.PostsAdapter
 import com.brycecorbitt.artsyapp.R
+import com.brycecorbitt.artsyapp.api.ResponseHandler
 import com.brycecorbitt.artsyapp.api.User
 import com.brycecorbitt.artsyapp.ui.preferences.PreferencesViewModel
 
@@ -31,7 +33,7 @@ class FeedFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferencesViewModel = PreferencesViewModel.get()
-        Log.d(TAG, "Total posts: ${feedViewModel.posts.size}")
+        //Log.d(TAG, "Total posts: ${feedViewModel.posts.size}")
     }
 
     override fun onStart() {
@@ -72,10 +74,17 @@ class FeedFragment : Fragment() {
         radiusTextView = root.findViewById(R.id.radius_text)
         refreshButton = root.findViewById(R.id.refresh)
 
-        val posts = feedViewModel.posts
-        val  postsAdapter = PostsAdapter(posts, activity!!)
-        feedListView.adapter = postsAdapter
-
+        //val posts = feedViewModel.postListLiveData.value
+        feedViewModel.postListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { posts ->
+                posts?.let {
+                    Log.i(TAG, "Got posts ${posts.size}")
+                    val  postsAdapter = PostsAdapter(posts!!, activity!!)
+                    feedListView.adapter = postsAdapter
+                }
+            }
+        )
         return root
     }
 }
