@@ -3,6 +3,7 @@ package com.brycecorbitt.artsyapp.api
 import retrofit2.Call
 import retrofit2.http.*
 
+
 interface AppAPI {
     //AUTH ENDPOINTS
     @GET("/auth/callback")
@@ -29,14 +30,16 @@ interface AppAPI {
         @Field("content") content: String?
     ): Call<Post>
 
-    @DELETE("/post/:id")
-    fun deletePost(@Query("id") id: String?): Call<String>
+    @DELETE("/post/{id}")
+    fun deletePost(@Path("id") id: String?): Call<Void>?
 
-    @GET("/post/:id/upvote")
-    fun upvote(@Query("id") id: String?): Call<String>
+    @GET("/post/{id}/upvote")
+    fun upvote(@Path("id") id: String?): Call<VoteData>?
 
-    @GET("/post/:id/downvote")
-    fun downvote(@Query("id") id: String?): Call<String>
+
+
+    @GET("/post/{id}/downvote")
+    fun downvote(@Path("id") id: String?): Call<VoteData>?
 
     @GET("/post/:id")
     fun getPost(@Query("id") id: String?): Call<Post>

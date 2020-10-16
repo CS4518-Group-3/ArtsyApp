@@ -138,55 +138,55 @@ class ResponseHandler(context: Context?) {
         return responseLiveData
     }
 
-    fun deletePost(id: String?): LiveData<String> {
-        val responseLiveData: MutableLiveData<String> = MutableLiveData()
-        val appRequest: Call<String> = appAPI.deletePost(id)
-        appRequest.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+    fun deletePost(id: String?): LiveData<Void>? {
+        val responseLiveData: MutableLiveData<Void> = MutableLiveData()
+        val appRequest: Call<Void>? = appAPI.deletePost(id)
+        appRequest?.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>?, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
+                call: Call<Void>?,
+                response: Response<Void>?
             ) {
-                responseLiveData.value = response.body()
+                responseLiveData.value = response?.body()
             }
         })
         return responseLiveData
     }
 
-    fun upvote(id: String?): LiveData<String> {
-        val responseLiveData: MutableLiveData<String> = MutableLiveData()
-        val appRequest: Call<String> = appAPI.upvote(id)
-        appRequest.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+    fun upvote(id: String?): LiveData<VoteData>? {
+        val responseLiveData: MutableLiveData<VoteData>? = MutableLiveData()
+        val appRequest: Call<VoteData>? = appAPI.upvote(id)
+        appRequest?.enqueue(object : Callback<VoteData> {
+            override fun onFailure(call: Call<VoteData>?, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
+                call: Call<VoteData>?,
+                response: Response<VoteData>?
             ) {
-                responseLiveData.value = response.body()
+                responseLiveData?.value = response?.body()
             }
         })
         return responseLiveData
     }
 
-    fun downvote(id: String?): LiveData<String> {
-        val responseLiveData: MutableLiveData<String> = MutableLiveData()
-        val appRequest: Call<String> = appAPI.downvote(id)
-        appRequest.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+    fun downvote(id: String?): LiveData<VoteData>? {
+        val responseLiveData: MutableLiveData<VoteData>? = MutableLiveData()
+        val appRequest: Call<VoteData>? = appAPI.downvote(id)
+        appRequest?.enqueue(object : Callback<VoteData> {
+            override fun onFailure(call: Call<VoteData>?, t: Throwable) {
                 Log.e(TAG, "Failed!", t)
             }
 
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
+                call: Call<VoteData>?,
+                response: Response<VoteData>?
             ) {
-                responseLiveData.value = response.body()
+                responseLiveData?.value = response?.body()
             }
         })
         return responseLiveData
