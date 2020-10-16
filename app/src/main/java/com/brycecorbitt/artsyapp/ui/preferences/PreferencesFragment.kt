@@ -161,8 +161,8 @@ class PreferencesFragment : Fragment() {
         if (requestCode == LOCATIONPICKERREQUEST) {
             try {
                 if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
-                    settingsViewModel.setGlobalLocation(data.getFloatExtra(MapUtility.LATITUDE, 0.0F),
-                        data.getFloatExtra(MapUtility.LONGITUDE, 0.0F))
+                    settingsViewModel.setGlobalLocation(data.extras?.getDouble("lat")?.toFloat()?:1.0F,
+                        data.extras?.getDouble("long")?.toFloat()?:1.0F)
                     var s: String? = data.getBundleExtra("fullAddress").getString("city")
                     if (s != null) {
                         settingsViewModel.setLocationButtonText(s)

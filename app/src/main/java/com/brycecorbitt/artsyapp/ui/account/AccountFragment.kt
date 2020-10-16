@@ -56,7 +56,7 @@ class AccountFragment : Fragment() {
             Observer { posts ->
                 posts?.let {
                     Log.i("Account", "Got posts ${posts.size}")
-                    val  postsAdapter = PostsAdapter(posts, activity!!)
+                    val  postsAdapter = PostsAdapter(posts, activity!!, viewLifecycleOwner)
                     feedListView.adapter = postsAdapter
                 }
             }
