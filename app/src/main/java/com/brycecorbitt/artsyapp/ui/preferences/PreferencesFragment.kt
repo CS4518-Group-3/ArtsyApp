@@ -73,6 +73,19 @@ class PreferencesFragment : Fragment() {
         emailTextView.text = user.email
         Picasso.get().load(user.profile_url).into(profilePic)
         locationButton.text = settingsViewModel.currentLocationButtonText
+        if(settingsViewModel.currentUnit.equals("mi")) {
+            locationTextView.text = "Select your location radius for posts (mi):"
+            miRadio.isChecked = true
+            miSlider.value = settingsViewModel.currentRadius
+            kmSlider.visibility = View.GONE
+            miSlider.visibility = View.VISIBLE
+        } else {
+            locationTextView.text = "Select your location radius for posts (km):"
+            kmRadio.isChecked = true
+            kmSlider.value = settingsViewModel.currentRadius
+            miSlider.visibility = View.GONE
+            kmSlider.visibility = View.VISIBLE
+        }
         return root
     }
 

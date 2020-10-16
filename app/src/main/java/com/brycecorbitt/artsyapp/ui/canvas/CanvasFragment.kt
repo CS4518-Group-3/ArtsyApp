@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.brycecorbitt.artsyapp.LocationService
 import com.brycecorbitt.artsyapp.MainActivity
 import com.brycecorbitt.artsyapp.R
 import com.brycecorbitt.artsyapp.api.AuthenticationResponse
@@ -91,7 +92,9 @@ class CanvasFragment : Fragment() {
             Toast.makeText(activity?.applicationContext, encoded, Toast.LENGTH_SHORT).show()
             val base64String : String = convertBitmap(canvasView.getDrawingCache())
             //submitResponse = ResponseHandler(activity?.applicationContext).createPost(42.273828f, -71.809759f, base64String)
-            val response: LiveData<Post> = apiCall.createPost(42.273828f, -71.809759f, base64String)
+            val latitude : Float = LocationService.current_location?.latitude?.toFloat() as Float
+            val longitude : Float = LocationService.current_location?.longitude?.toFloat() as Float
+            val response: LiveData<Post> = apiCall.createPost(latitude, longitude, base64String)
             response.observe(
                 this.viewLifecycleOwner,
                 Observer {

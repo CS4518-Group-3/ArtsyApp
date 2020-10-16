@@ -34,7 +34,7 @@ class Post(lat: Float?, lon: Float?, content: String?) {
     var updated_at: String? = null
 
     @SerializedName("vote_status")
-    var status: VoteStatus? = null
+    var vote_status: VoteStatus? = null
 
     enum class VoteStatus {
         @SerializedName("0")
