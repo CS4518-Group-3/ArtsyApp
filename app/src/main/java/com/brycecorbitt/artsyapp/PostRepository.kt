@@ -15,7 +15,7 @@ class PostRepository private constructor(context: Context) {
     private var preferencesViewModel = PreferencesViewModel.get()
 
     fun getPosts(page: Int, limit: Int): LiveData<List<Post>> {
-        val location = LocationService.current_location
+        var location = LocationService.current_location
         val local = true
         var lon: Float = 42.270634F
         var lat: Float = -71.80286F

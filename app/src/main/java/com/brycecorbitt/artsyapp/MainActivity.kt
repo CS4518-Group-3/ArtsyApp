@@ -2,6 +2,7 @@ package com.brycecorbitt.artsyapp
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -152,8 +153,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideLogin() {
         // Programmatically navigate to home (feed) screen
+
         val navController = findNavController(R.id.nav_host_fragment)
-        navController.navigate(R.id.navigation_feed)
+        var runningTask : AsyncTask<Void, Void, String> = AsyncAquireLocation(navController, R.id.navigation_feed);
+        runningTask.execute()
+        //
         // Show Navigation bar
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.visibility = View.VISIBLE
