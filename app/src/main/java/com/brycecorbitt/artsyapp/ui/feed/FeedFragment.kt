@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation.findNavController
 import com.brycecorbitt.artsyapp.PostsAdapter
 import com.brycecorbitt.artsyapp.R
+import com.brycecorbitt.artsyapp.api.User
+import com.brycecorbitt.artsyapp.ui.preferences.PreferencesViewModel
 
 private const val TAG = "FeedFragment"
 
@@ -20,6 +22,7 @@ class FeedFragment : Fragment() {
     private lateinit var radiusLayout: LinearLayout
     private lateinit var radiusTextView: TextView
     private lateinit var refreshButton: ImageButton
+    private lateinit var preferencesViewModel: PreferencesViewModel
 
     private val feedViewModel: FeedViewModel by lazy {
         ViewModelProviders.of(this).get(FeedViewModel::class.java)
@@ -27,6 +30,7 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preferencesViewModel = PreferencesViewModel.get()
         Log.d(TAG, "Total posts: ${feedViewModel.posts.size}")
     }
 
@@ -39,14 +43,14 @@ class FeedFragment : Fragment() {
             // refresh feed with new browsing mode (update location TextView)
         }
 
-        //TODO: check/update location
+        //TODO: check/update location TextView
 
         radiusLayout.setOnClickListener {
             val navController = findNavController(activity!!, R.id.nav_host_fragment)
             navController.navigate(R.id.navigation_preferences)
         }
 
-        // TODO: update radius text
+        radiusTextView.text = preferencesViewModel.currentRadius.toInt().toString()
 
         refreshButton.setOnClickListener {
             //TODO:

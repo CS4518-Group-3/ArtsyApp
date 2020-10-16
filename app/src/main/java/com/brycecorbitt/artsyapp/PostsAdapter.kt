@@ -6,7 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.brycecorbitt.artsyapp.api.AppAPI
 import com.brycecorbitt.artsyapp.api.Post
+import com.brycecorbitt.artsyapp.api.ResponseHandler
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 private const val TAG = "PostsAdapter"
@@ -44,26 +51,23 @@ class PostsAdapter(items: ArrayList<Post>, ctx: Context) :
             viewHolder = view.tag as AttractionItemViewHolder
         }
 
-        Log.d(TAG, "hey bicth")
         val post = getItem(i)
-        val voteHandler = VoteHandler(post, viewHolder)
-        voteHandler.loadVote()
+
         viewHolder.votes!!.text = post!!.score.toString()
 
         viewHolder.upvote!!.setOnClickListener {
-            viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
-            //voteHandler.handleNewVote(UPVOTED)
+            // TODO: make upvote request
         }
 
         viewHolder.downvote!!.setOnClickListener {
-            voteHandler.handleNewVote(DOWNVOTED)
+            // TODO: make upvote request
         }
         view!!.tag = viewHolder
 
         return view
     }
 
-    /*
+/*
     TODO: REFACTOR FOR API
     - each setOnClickListener should make get request to API
     - Callback will be a JSON object with new net votes and new vote status
@@ -75,45 +79,47 @@ class PostsAdapter(items: ArrayList<Post>, ctx: Context) :
     - VoteHandler class can be removed
      */
 
-    private inner class VoteHandler(post: Post?, viewHolder: AttractionItemViewHolder) {
+/*
+
+   private inner class VoteHandler(post: Post?, viewHolder: AttractionItemViewHolder) {
         private val viewHolder = viewHolder
         private val post = post
 
         fun upVote(newVote: Int) {
-//            if (post!!.voteStatus == newVote) {
-//                post.net -= 1
-//                post.voteStatus = UNVOTED
-//            } else if (post.voteStatus == DOWNVOTED) {
-//                post!!.net += 2
-//                post.voteStatus = UPVOTED
-//                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
-//            } else if (post.voteStatus == UNVOTED) {
-//                post!!.net += 1
-//                post.voteStatus = UPVOTED
-//                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
-//            }
+            if (post!!.voteStatus == newVote) {
+                post.net -= 1
+                post.voteStatus = UNVOTED
+            } else if (post.voteStatus == DOWNVOTED) {
+                post!!.net += 2
+                post.voteStatus = UPVOTED
+                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
+            } else if (post.voteStatus == UNVOTED) {
+                post!!.net += 1
+                post.voteStatus = UPVOTED
+                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
+            }
         }
 
         fun downVote(newVote: Int) {
-//            if (post!!.voteStatus == newVote) {
-//                post.net += 1
-//                post.voteStatus = UNVOTED
-//            } else if (post.voteStatus == UPVOTED) {
-//                post!!.net -= 2
-//                post.voteStatus = DOWNVOTED
-//                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
-//            } else if (post.voteStatus == UNVOTED) {
-//                post!!.net -= 1
-//                post.voteStatus = DOWNVOTED
-//                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
-//            }
+            if (post!!.voteStatus == newVote) {
+                post.net += 1
+                post.voteStatus = UNVOTED
+            } else if (post.voteStatus == UPVOTED) {
+                post!!.net -= 2
+                post.voteStatus = DOWNVOTED
+                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
+            } else if (post.voteStatus == UNVOTED) {
+                post!!.net -= 1
+                post.voteStatus = DOWNVOTED
+                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
+            }
         }
 
         fun loadVote() {
-//            if (post!!.voteStatus == UPVOTED)
-//                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
-//            else if (post.voteStatus == DOWNVOTED)
-//                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
+            if (post!!.voteStatus == UPVOTED)
+                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
+            else if (post.voteStatus == DOWNVOTED)
+                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
         }
 
         fun handleNewVote(newVote: Int) {
@@ -126,4 +132,5 @@ class PostsAdapter(items: ArrayList<Post>, ctx: Context) :
             //viewHolder.votes!!.text = post!!.net.toString()
         }
     }
+ */
 }
