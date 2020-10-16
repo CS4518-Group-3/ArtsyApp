@@ -102,13 +102,6 @@ class CanvasFragment : Fragment() {
 
             val base64String : String = convertBitmap(canvasView.getDrawingCache())
 
-            val decodeBytes : ByteArray = Base64.decode(base64String, Base64.NO_WRAP or Base64.URL_SAFE)
-            val bmp : Bitmap = BitmapFactory.decodeByteArray(decodeBytes, 0, decodeBytes.size)
-            Toast.makeText(activity?.applicationContext, (bmp == null).toString(), Toast.LENGTH_LONG).show()
-
-            canvasView.background =  BitmapDrawable(getResources(), bmp);
-            canvasView.postInvalidate()
-
 
             val latitude : Float = LocationService.current_location?.latitude?.toFloat() as Float
             val longitude : Float = LocationService.current_location?.longitude?.toFloat() as Float
