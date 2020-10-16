@@ -111,7 +111,7 @@ class PreferencesFragment : Fragment() {
             val activity: Activity? = activity
             if (activity is MainActivity) {
                 val myactivity: MainActivity? = activity
-                myactivity?.showLogin()
+                //myactivity?.showLogin()
             }
         }
         deleteAccount.setOnClickListener {
@@ -119,7 +119,7 @@ class PreferencesFragment : Fragment() {
             val activity: Activity? = activity
             if (activity is MainActivity) {
                 val myactivity: MainActivity? = activity
-                myactivity?.showLogin()
+                //myactivity?.showLogin()
             }
         }
         locationButton.setOnClickListener {

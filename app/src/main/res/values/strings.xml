@@ -5,4 +5,8 @@
     <string name="title_canvas">Canvas</string>
     <string name="title_account">Account</string>
     <string name="title_login">Login</string>
+    <string name="browsing_mode">Browsing Mode</string>
+    <string name="location">Location</string>
+    <string name="radius">Radius</string>
+    <string name="refresh">Refresh</string>
 </resources>
