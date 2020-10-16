@@ -11,7 +11,7 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
     init {
         Companion.templatePaint.style = Paint.Style.STROKE
         Companion.templatePaint.strokeWidth = 10F
-        Companion.templatePaint.color = Color.RED
+        //Companion.templatePaint.color = Color.RED
         this.isDrawingCacheEnabled = true;
     }
 
@@ -59,7 +59,7 @@ class CanvasView(context: Context?, attributeSet: AttributeSet?) : View(context,
     }
 
     companion object {
-        val templatePaint : Paint = Paint()
+        var templatePaint : Paint = Paint()
         val pathList: ArrayList<Path> = ArrayList()
         val paintList: ArrayList<Paint> = ArrayList()
 

@@ -1,7 +1,9 @@
 package com.brycecorbitt.artsyapp.ui.canvas
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -11,34 +13,41 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.brycecorbitt.artsyapp.LocationService
-import com.brycecorbitt.artsyapp.MainActivity
 import com.brycecorbitt.artsyapp.R
-import com.brycecorbitt.artsyapp.api.AuthenticationResponse
 import com.brycecorbitt.artsyapp.api.Post
 import com.brycecorbitt.artsyapp.api.ResponseHandler
-import com.brycecorbitt.artsyapp.api.User
-import kotlinx.android.synthetic.main.fragment_canvas.*
 import java.io.ByteArrayOutputStream
 
 
 class CanvasFragment : Fragment() {
 
-    private val canvasViewModel: CanvasViewModel by lazy {
-    ViewModelProviders.of(this).get(CanvasViewModel::class.java)
-    }
-
+//    private val canvasViewModel: CanvasViewModel by lazy {
+//    ViewModelProviders.of(this).get(CanvasViewModel::class.java)
+//    }
+    private lateinit var canvasViewModel : CanvasViewModel
     private lateinit var apiCall: ResponseHandler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
+    //Views
+    private lateinit var canvasView: CanvasView
+    private lateinit var colorBar: SeekBar
+    private lateinit var lightBar: SeekBar
+    private lateinit var clearButton: Button
+    private lateinit var undoButton: Button
+    private lateinit var submitButton: Button
+    private lateinit var colorIndicator: TextView
+    private lateinit var lightnessIndicator: TextView
+    private lateinit var compositeIndicator: TextView
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,29 +55,36 @@ class CanvasFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        canvasViewModel = CanvasViewModel()
 
         apiCall = ResponseHandler(activity?.applicationContext)
-
-
-
         lateinit var submitResponse : LiveData<Post>
 
         val root = inflater.inflate(R.layout.fragment_canvas, container, false)
-        //val textView: TextView = root.findViewById(R.id.text_canvas)
-        //val base: CanvasView = root.findViewById(R.id.canvasView)
-        //base.setContent
-        val canvasView: CanvasView = root.findViewById(R.id.canvasView)//CanvasView(this.context)
-        val colorBar: SeekBar = root.findViewById(R.id.seekBar)
 
-        val lightBar: SeekBar = root.findViewById(R.id.seekBar3)
-        colorBar.progress = canvasViewModel.colorBarProgress
-        lightBar.progress = canvasViewModel.lightBarProgress
-        val clearButton: Button =root.findViewById(R.id.button4)
-        val undoButton: Button =root.findViewById(R.id.button5)
-        val submitButton: Button =root.findViewById(R.id.button)
-        val colorIndicator: TextView = root.findViewById(R.id.textView)
+        canvasView = root.findViewById(R.id.canvasView)
+        colorBar = root.findViewById(R.id.seekBar_color)
+        lightBar = root.findViewById(R.id.seekBar_blackwhite)
+        clearButton = root.findViewById(R.id.button_clear)
+        undoButton = root.findViewById(R.id.button_undo)
+        submitButton = root.findViewById(R.id.button_finish)
+        colorIndicator = root.findViewById(R.id.colorTV)
+        lightnessIndicator = root.findViewById(R.id.blackwhiteTV)
+        compositeIndicator = root.findViewById(R.id.compositeTV)
+
+        // Persist all color and seekerBar progress info
+        colorBar.progress = CanvasViewModel.colorBarProgress!!
+        colorBar.max = CanvasViewModel.colorBarMax
+        lightBar.progress = CanvasViewModel.lightBarProgress!!
         colorIndicator.setBackgroundColor(canvasViewModel.getColor())
-        //seekBar.max = 255
+        colorBar.thumb.setTint((canvasViewModel.getColorOnly()))
+        lightBar.thumb.setTint((canvasViewModel.getWhiteBlack()))
+        colorIndicator.setBackgroundColor(canvasViewModel.getColorOnly())
+        lightnessIndicator.setBackgroundColor(canvasViewModel.getWhiteBlack())
+        compositeIndicator.setBackgroundColor(canvasViewModel.getColor())
+        CanvasView.templatePaint = CanvasViewModel.currentPaint!!
+
+
         clearButton.setOnClickListener {
             CanvasView.paintList.clear()
             CanvasView.pathList.clear()
@@ -82,29 +98,25 @@ class CanvasFragment : Fragment() {
             }
         }
         submitButton.setOnClickListener {
-            //var bitmap : Bitmap = Bitmap.
-            //canvasView.lastCanvas
-            //activity(canvasView, this., )
-            var encoded : String = "TODO: Post Base64 string"
-            //screenshotCanvas(canvasView, activity?.window, ))
-                //Toast.makeText(activity?.applicationContext, encoded, Toast.LENGTH_SHORT).show()
 
-            Toast.makeText(activity?.applicationContext, encoded, Toast.LENGTH_SHORT).show()
+
             val base64String : String = convertBitmap(canvasView.getDrawingCache())
-            //submitResponse = ResponseHandler(activity?.applicationContext).createPost(42.273828f, -71.809759f, base64String)
+
+
             val latitude : Float = LocationService.current_location?.latitude?.toFloat() as Float
             val longitude : Float = LocationService.current_location?.longitude?.toFloat() as Float
             val response: LiveData<Post> = apiCall.createPost(latitude, longitude, base64String)
             response.observe(
                 this.viewLifecycleOwner,
                 Observer {
+                    var msg = ""
+                    if (it != null){
+                        msg = getString(R.string.toast_submit_success)
+                    } else{
+                        msg = getString(R.string.toast_submit_fail)
+                    }
+                    Toast.makeText(activity?.applicationContext, msg, Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.navigation_account)
-                    //item ->
-//                if (!item?.!!) {
-//                    showLogin()
-//                } else {
-//
-//                }
                 }
             )
         }
@@ -113,72 +125,64 @@ class CanvasFragment : Fragment() {
         colorBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
-                    CanvasView.templatePaint.color =
-                        canvasViewModel.setPaintHue(seek.progress.toFloat())
-                    colorIndicator.setBackgroundColor(canvasViewModel.getColor())
+                    CanvasViewModel.colorBarProgress = progress
+                    CanvasView.templatePaint.color = canvasViewModel.setPaintHue(seek.progress.toFloat())
+                    colorIndicator.setBackgroundColor(canvasViewModel.getColorOnly())
                     seek.thumb.setTint((canvasViewModel.getColorOnly()))
+                    compositeIndicator.setBackgroundColor(canvasViewModel.getColor())
                 }
 
                 override fun onStartTrackingTouch(seek: SeekBar) {}
-                override fun onStopTrackingTouch(seek: SeekBar) {
-
-                }
+                override fun onStopTrackingTouch(seek: SeekBar) {}
             })
         lightBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
-                    CanvasView.templatePaint.color =
-                        canvasViewModel.setPaintVal(seek.progress.toFloat() / 100f)
-                    colorIndicator.setBackgroundColor(canvasViewModel.getColor())
+                    CanvasViewModel.lightBarProgress = progress
+                    CanvasView.templatePaint.color = canvasViewModel.setPaintVal(progress.toFloat())
+                    lightnessIndicator.setBackgroundColor(canvasViewModel.getWhiteBlack())
                     seek.thumb.setTint((canvasViewModel.getWhiteBlack()))
+                    compositeIndicator.setBackgroundColor(canvasViewModel.getColor())
                 }
 
                 override fun onStartTrackingTouch(seek: SeekBar) {}
-                override fun onStopTrackingTouch(seek: SeekBar) {
-
-                }
+                override fun onStopTrackingTouch(seek: SeekBar) { }
             })
-//        canvasViewModel.text.observe(viewLifecycleOwner, Observer {
-//            //textView.text = it
-//        })
         return root
 
     }
 
     fun convertBitmap(bm : Bitmap) : String{
+
         val byteArrayOutputStream = ByteArrayOutputStream()
         bm.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP or Base64.URL_SAFE)
     }
 
     fun screenshotCanvas(view: View, window: Window?, callback: (Bitmap) -> Unit) {
         window?.let { window ->
-            val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-            val locationOfViewInWindow = IntArray(2)
-            view.getLocationInWindow(locationOfViewInWindow)
+            val destBM = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            val rectLocations = IntArray(2)
+            view.getLocationInWindow(rectLocations)
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     PixelCopy.request(
                         window,
                         Rect(
-                            locationOfViewInWindow[0],
-                            locationOfViewInWindow[1],
-                            locationOfViewInWindow[0] + view.width,
-                            locationOfViewInWindow[1] + view.height
-                        ), bitmap, { copyResult ->
+                            rectLocations[0],
+                            rectLocations[1],
+                            rectLocations[0] + view.width,
+                            rectLocations[1] + view.height
+                        ), destBM, { copyResult ->
                             if (copyResult == PixelCopy.SUCCESS) {
-                                callback(bitmap)
-                            } else {
-
+                                callback(destBM)
                             }
-                            // possible to handle other result codes ...
                         },
                         Handler()
                     )
                 }
             } catch (e: IllegalArgumentException) {
-                // PixelCopy may throw IllegalArgumentException, make sure to handle it
                 e.printStackTrace()
             }
         }

@@ -14,5 +14,8 @@
     <string name="button_clear">Clear</string>
     <string name="info_color">Color</string>
     <string name="info_lightness">Lightness</string>
+    <string name="toast_submit_success">Successfully Submitted</string>
+    <string name="toast_submit_fail">Failed to Submit</string>
+    <string name="info_paintbrush">Brush</string>
 
 </resources>
