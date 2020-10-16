@@ -21,11 +21,12 @@ interface AppAPI {
 
 
     //POST ENDPOINTS
+    @FormUrlEncoded
     @POST("/post")
     fun createPost(
-        @Query("lat") lat: Float?,
-        @Query("lon") lon: Float?,
-        @Query("content") content: String?
+        @Field("lat") lat: Float?,
+        @Field("lon") lon: Float?,
+        @Field("content") content: String?
     ): Call<Post>
 
     @DELETE("/post/:id")
