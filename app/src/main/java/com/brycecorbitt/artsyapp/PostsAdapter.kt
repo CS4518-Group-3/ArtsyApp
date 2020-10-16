@@ -1,24 +1,21 @@
 package com.brycecorbitt.artsyapp
 
 import android.content.Context
-import android.util.Log
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.brycecorbitt.artsyapp.api.AppAPI
+import android.widget.ArrayAdapter
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import com.brycecorbitt.artsyapp.api.Post
-import com.brycecorbitt.artsyapp.api.ResponseHandler
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
+import android.util.Base64
+
 
 private const val TAG = "PostsAdapter"
 
-class PostsAdapter(items: ArrayList<Post>, ctx: Context) :
+class PostsAdapter(items: List<Post>, ctx: Context) :
         ArrayAdapter<Post>(ctx, R.layout.feed_item, items) {
 
     private class AttractionItemViewHolder {
@@ -63,7 +60,11 @@ class PostsAdapter(items: ArrayList<Post>, ctx: Context) :
             // TODO: make upvote request
         }
         view!!.tag = viewHolder
-
+        val opt = BitmapFactory.Options()
+        opt.inJustDecodeBounds = false
+        val decodedBytes: ByteArray = Base64.decode(post.content, Base64.NO_WRAP or Base64.URL_SAFE)
+        val bmp = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size, opt)
+        viewHolder.image?.setImageBitmap(bmp)
         return view
     }
 

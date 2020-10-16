@@ -14,8 +14,22 @@ class PostRepository private constructor(context: Context) {
     private var appCaller: ResponseHandler = ResponseHandler(context)
     private var preferencesViewModel = PreferencesViewModel.get()
 
-    fun getPosts(): LiveData<List<Post>> = appCaller.getFeed(preferencesViewModel.currentLat, preferencesViewModel.currentLon, preferencesViewModel.currentRadius,
-        preferencesViewModel.currentUnit, preferencesViewModel.CurrentSortType,1,10)
+    fun getPosts(page: Int, limit: Int): LiveData<List<Post>> {
+        val location = LocationService.current_location
+        val local = true
+        var lon: Float = 42.270634F
+        var lat: Float = -71.80286F
+
+        if(local && location != null){
+            lat = location.latitude.toFloat()
+            lon = location.longitude.toFloat()
+        }
+//        else {
+//            lat = preferencesViewModel.currentLat
+//            lon = preferencesViewModel.currentLon
+//        }
+        return appCaller.getFeed(lon, lat, preferencesViewModel.currentRadius,
+        preferencesViewModel.currentUnit, preferencesViewModel.CurrentSortType,page,100000)}
 
     companion object {
         private var INSTANCE: PostRepository? = null

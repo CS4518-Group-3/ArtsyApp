@@ -25,6 +25,8 @@ class FeedFragment : Fragment() {
     private lateinit var radiusTextView: TextView
     private lateinit var refreshButton: ImageButton
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private var page: Int = 1
+    private var limit: Int = 10
 
     private val feedViewModel: FeedViewModel by lazy {
         ViewModelProviders.of(this).get(FeedViewModel::class.java)
@@ -67,6 +69,9 @@ class FeedFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_feed, container, false)
         feedListView = root.findViewById(R.id.post_list_view) as ListView
+//        feedListView.setOnScrollListener(object :AbsListView.OnScrollListener {
+//
+//        })
 
         browsingModeButton = root.findViewById(R.id.browsing_mode)
         locationTextView = root.findViewById(R.id.location)
@@ -80,7 +85,7 @@ class FeedFragment : Fragment() {
             Observer { posts ->
                 posts?.let {
                     Log.i(TAG, "Got posts ${posts.size}")
-                    val  postsAdapter = PostsAdapter(posts!!, activity!!)
+                    val  postsAdapter = PostsAdapter(posts, activity!!)
                     feedListView.adapter = postsAdapter
                 }
             }
