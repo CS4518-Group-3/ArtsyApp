@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.brycecorbitt.artsyapp.api.Post
 import com.brycecorbitt.artsyapp.api.ResponseHandler
+import com.brycecorbitt.artsyapp.api.User
 import com.brycecorbitt.artsyapp.ui.preferences.PreferencesViewModel
 
 import java.lang.IllegalStateException
@@ -30,6 +31,10 @@ class PostRepository private constructor(context: Context) {
 //        }
         return appCaller.getFeed(lon, lat, preferencesViewModel.currentRadius,
         preferencesViewModel.currentUnit, preferencesViewModel.CurrentSortType,page,100000)}
+
+    fun getUserPosts(page: Int, limit: Int): LiveData<List<Post>> {
+
+        return appCaller.getUserFeed(page, limit)}
 
     companion object {
         private var INSTANCE: PostRepository? = null

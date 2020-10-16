@@ -16,6 +16,10 @@
     <string name="info_lightness">Lightness</string>
     <string name="toast_submit_success">Successfully Submitted</string>
     <string name="toast_submit_fail">Failed to Submit</string>
-    <string name="info_paintbrush">Brush</string>
+    <string name="info_paintbrush">Brush</string>\
+    <string name="info_newest">Newest</string>
+    <string name="info_popular">Most Popular</string>
+    <string name="info_sort">Sort By</string>
+    <string name="title_yours">Your Posts</string>
 
 </resources>
