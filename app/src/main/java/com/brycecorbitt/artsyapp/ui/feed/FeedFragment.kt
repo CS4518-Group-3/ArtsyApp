@@ -44,9 +44,35 @@ class FeedFragment : Fragment() {
         super.onStart()
 
         browsingModeButton.setOnClickListener {
-            //TODO:
-            // change browsing mode & image
-            // refresh feed with new browsing mode (update location TextView)
+            if (preferencesViewModel.checkIsLocal) {
+                preferencesViewModel.setIsLocal(false)
+                browsingModeButton.setBackgroundResource(R.drawable.ic_global_browsing)
+                feedViewModel.postListLiveData = feedViewModel.postRepository.getPosts(page, limit)
+                feedViewModel.postListLiveData.observe(
+                    viewLifecycleOwner,
+                    Observer { posts ->
+                        posts?.let {
+                            Log.i(TAG, "Got posts ${posts.size}")
+
+                            feedListView.adapter = PostsAdapter(posts, activity!!)
+                        }
+                    }
+                )
+            } else {
+                preferencesViewModel.setIsLocal(true)
+                browsingModeButton.setBackgroundResource(R.drawable.ic_local_browsing)
+                feedViewModel.postListLiveData = feedViewModel.postRepository.getPosts(page, limit)
+                feedViewModel.postListLiveData.observe(
+                    viewLifecycleOwner,
+                    Observer { posts ->
+                        posts?.let {
+                            Log.i(TAG, "Got posts ${posts.size}")
+
+                            feedListView.adapter = PostsAdapter(posts, activity!!)
+                        }
+                    }
+                )
+            }
         }
 
         //TODO: check/update location TextView
@@ -75,9 +101,9 @@ class FeedFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_feed, container, false)
         feedListView = root.findViewById(R.id.post_list_view) as ListView
