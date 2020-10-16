@@ -40,11 +40,11 @@ class MainActivity : AppCompatActivity() {
             if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
             } else {
-                kms()
+                initLocationService()
             }
 
         } else {
-            kms()
+            initLocationService()
         }
 
 
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 1){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
 
-                kms()
+                initLocationService()
             }
             else {
                 Toast.makeText(this, "Wrong choice", Toast.LENGTH_SHORT).show()
@@ -135,10 +135,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun kms() {
-        val intent : Intent = Intent(this, LocationService::class.java)
+    fun initLocationService() {
+        val intent = Intent(this, LocationService::class.java)
         startService(intent)
-        Toast.makeText(this, "Please end my miserable existence", Toast.LENGTH_SHORT).show()
     }
 
     fun showLogin() {
