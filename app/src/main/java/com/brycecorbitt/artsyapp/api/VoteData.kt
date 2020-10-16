@@ -6,7 +6,7 @@ class VoteData {
 
     // enum
     @SerializedName("vote_status")
-    var vote_status: Int = 0
+    lateinit var vote_status: Post.VoteStatus
 
 
     //netvotes
