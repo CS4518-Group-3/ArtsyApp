@@ -1,22 +1,32 @@
 package com.brycecorbitt.artsyapp
 
+import android.R.attr.label
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.graphics.BitmapFactory
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.brycecorbitt.artsyapp.api.Post
-import android.util.Base64
-
+import com.brycecorbitt.artsyapp.api.ResponseHandler
+import com.brycecorbitt.artsyapp.api.VoteData
 
 private const val TAG = "PostsAdapter"
 
-class PostsAdapter(items: List<Post>, ctx: Context) :
+class PostsAdapter(items: List<Post>, ctx: Context, viewLifecycleOwner: LifecycleOwner) :
         ArrayAdapter<Post>(ctx, R.layout.feed_item, items) {
+
+    private var viewLifecycleOwner = viewLifecycleOwner
+    private var appAPI = ResponseHandler(ctx)
+    private var ctx = ctx
 
     private class AttractionItemViewHolder {
         internal var image: ImageView? = null
@@ -52,12 +62,38 @@ class PostsAdapter(items: List<Post>, ctx: Context) :
 
         viewHolder.votes!!.text = post!!.score.toString()
 
+        loadVote(post, viewHolder)
+
+        viewHolder.share.setOnClickListener{
+            val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("Share", "http://mbsr.wpi.edu:6567/post/" + post.id.toString())
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(context,
+                "Post Copied!",
+                Toast.LENGTH_SHORT)
+                .show()
+        }
+
         viewHolder.upvote!!.setOnClickListener {
-            // TODO: make upvote request
+            var response = appAPI.upvote(post.id)
+            response!!.observe(
+                viewLifecycleOwner,
+                Observer { voteData ->
+                    voteData?.let {
+                        handleVote(post, voteData, viewHolder)
+                    }
+                })
         }
 
         viewHolder.downvote!!.setOnClickListener {
-            // TODO: make upvote request
+            var response = appAPI.downvote(post.id)
+            response!!.observe(
+                viewLifecycleOwner,
+                Observer { voteData ->
+                    voteData?.let {
+                        handleVote(post, voteData, viewHolder)
+                    }
+                })
         }
         view!!.tag = viewHolder
         val opt = BitmapFactory.Options()
@@ -68,70 +104,30 @@ class PostsAdapter(items: List<Post>, ctx: Context) :
         return view
     }
 
-/*
-    TODO: REFACTOR FOR API
-    - each setOnClickListener should make get request to API
-    - Callback will be a JSON object with new net votes and new vote status
-    - Callback can call generic function for up and downvote
-        - reset backgrounds
-        - set net upvote
-        - set vote status
-        - use vote status to change appropriate vote button
-    - VoteHandler class can be removed
-     */
+    private fun handleVote(post: Post,voteData: VoteData, viewHolder: AttractionItemViewHolder) {
+        viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_default)
+        viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_default)
 
-/*
-
-   private inner class VoteHandler(post: Post?, viewHolder: AttractionItemViewHolder) {
-        private val viewHolder = viewHolder
-        private val post = post
-
-        fun upVote(newVote: Int) {
-            if (post!!.voteStatus == newVote) {
-                post.net -= 1
-                post.voteStatus = UNVOTED
-            } else if (post.voteStatus == DOWNVOTED) {
-                post!!.net += 2
-                post.voteStatus = UPVOTED
-                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
-            } else if (post.voteStatus == UNVOTED) {
-                post!!.net += 1
-                post.voteStatus = UPVOTED
-                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
-            }
+        var voteStatus = voteData.vote_status
+        if (voteStatus == Post.VoteStatus.upvoted) {
+            viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
         }
-
-        fun downVote(newVote: Int) {
-            if (post!!.voteStatus == newVote) {
-                post.net += 1
-                post.voteStatus = UNVOTED
-            } else if (post.voteStatus == UPVOTED) {
-                post!!.net -= 2
-                post.voteStatus = DOWNVOTED
-                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
-            } else if (post.voteStatus == UNVOTED) {
-                post!!.net -= 1
-                post.voteStatus = DOWNVOTED
-                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
-            }
+        else if (voteStatus == Post.VoteStatus.downvoted) {
+            viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
         }
+        post.vote_status = voteStatus
+        post.score = voteData.score
 
-        fun loadVote() {
-            if (post!!.voteStatus == UPVOTED)
-                viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
-            else if (post.voteStatus == DOWNVOTED)
-                viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
+        viewHolder.votes!!.text = post!!.score.toString()
+    }
+
+    private fun loadVote(post: Post, viewHolder: AttractionItemViewHolder) {
+        Log.d(TAG, post.vote_status.toString() + " " + post.score)
+        if (post.vote_status == Post.VoteStatus.upvoted){
+            viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_pressed)
         }
-
-        fun handleNewVote(newVote: Int) {
-            viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_default)
-            viewHolder.upvote.setBackgroundResource(R.drawable.ic_upvote_default)
-
-            if (newVote == UPVOTED) upVote(newVote)
-            else if (newVote == DOWNVOTED) downVote(newVote)
-
-            //viewHolder.votes!!.text = post!!.net.toString()
+        else if (post.vote_status == Post.VoteStatus.downvoted) {
+            viewHolder.downvote.setBackgroundResource(R.drawable.ic_downvote_pressed)
         }
     }
- */
 }

@@ -66,7 +66,7 @@ class FeedFragment : Fragment() {
                     posts?.let {
                         Log.i(TAG, "Got posts ${posts.size}")
 
-                        feedListView.adapter = PostsAdapter(posts, activity!!)
+                        feedListView.adapter = PostsAdapter(posts, activity!!, viewLifecycleOwner)
                     }
                 }
             )
@@ -97,7 +97,7 @@ class FeedFragment : Fragment() {
             Observer { posts ->
                 posts?.let {
                     Log.i(TAG, "Got posts ${posts.size}")
-                    adapter = PostsAdapter(posts, activity!!)
+                    adapter = PostsAdapter(posts, activity!!, viewLifecycleOwner)
                     feedListView.adapter = adapter
                 }
             }
