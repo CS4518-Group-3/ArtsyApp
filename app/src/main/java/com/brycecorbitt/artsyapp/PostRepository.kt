@@ -28,7 +28,7 @@ class PostRepository private constructor(context: Context) {
 //            lat = preferencesViewModel.currentLat
 //            lon = preferencesViewModel.currentLon
 //        }
-        return appCaller.getFeed(lon, lat, preferencesViewModel.currentRadius,
+        return appCaller.getFeed(lat, lon, preferencesViewModel.currentRadius,
         preferencesViewModel.currentUnit, preferencesViewModel.CurrentSortType,page,100000)}
 
     companion object {

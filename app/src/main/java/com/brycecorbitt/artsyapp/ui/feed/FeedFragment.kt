@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation.findNavController
+import com.brycecorbitt.artsyapp.PostRepository
 import com.brycecorbitt.artsyapp.PostsAdapter
 import com.brycecorbitt.artsyapp.R
 import com.brycecorbitt.artsyapp.api.ResponseHandler
@@ -25,8 +26,9 @@ class FeedFragment : Fragment() {
     private lateinit var radiusTextView: TextView
     private lateinit var refreshButton: ImageButton
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var adapter: PostsAdapter
     private var page: Int = 1
-    private var limit: Int = 10
+    private var limit: Int = 100000
 
     private val feedViewModel: FeedViewModel by lazy {
         ViewModelProviders.of(this).get(FeedViewModel::class.java)
@@ -57,8 +59,18 @@ class FeedFragment : Fragment() {
         radiusTextView.text = preferencesViewModel.currentRadius.toInt().toString()
 
         refreshButton.setOnClickListener {
-            //TODO:
-            // refresh feed
+            feedViewModel.postListLiveData = feedViewModel.postRepository.getPosts(page, limit)
+            feedViewModel.postListLiveData.observe(
+                viewLifecycleOwner,
+                Observer { posts ->
+                    posts?.let {
+                        Log.i(TAG, "Got posts ${posts.size}")
+
+                        feedListView.adapter = PostsAdapter(posts, activity!!)
+                    }
+                }
+            )
+
         }
     }
 
@@ -85,8 +97,8 @@ class FeedFragment : Fragment() {
             Observer { posts ->
                 posts?.let {
                     Log.i(TAG, "Got posts ${posts.size}")
-                    val  postsAdapter = PostsAdapter(posts, activity!!)
-                    feedListView.adapter = postsAdapter
+                    adapter = PostsAdapter(posts, activity!!)
+                    feedListView.adapter = adapter
                 }
             }
         )

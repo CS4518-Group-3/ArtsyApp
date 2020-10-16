@@ -15,7 +15,7 @@ class FeedViewModel : ViewModel() {
     var page = 1
     var limit = 10
 
-    private val postRepository = PostRepository.get()
+    val postRepository = PostRepository.get()
     var postListLiveData = postRepository.getPosts(page, limit)
 
     init {
