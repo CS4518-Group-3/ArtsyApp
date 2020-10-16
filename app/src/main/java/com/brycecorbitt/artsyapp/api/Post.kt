@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class Post(lat: Float?, lon: Float?, content: String?) {
     @SerializedName("content")
-    lateinit var content: String
+    var content: String? = null
 
     @SerializedName("created_at")
     var created_at: String? = null
@@ -34,5 +34,14 @@ class Post(lat: Float?, lon: Float?, content: String?) {
     var updated_at: String? = null
 
     @SerializedName("vote_status")
-    var vote_status: String? = null
+    var status: VoteStatus? = null
+
+    enum class VoteStatus {
+        @SerializedName("0")
+        unvoted,
+        @SerializedName("1")
+        upvoted,
+        @SerializedName("2")
+        downvoted
+    }
 }
