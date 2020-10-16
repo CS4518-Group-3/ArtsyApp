@@ -1,8 +1,11 @@
 package com.brycecorbitt.artsyapp.ui.preferences
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.telecom.Call
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +15,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.brycecorbitt.artsyapp.MainActivity
 import com.brycecorbitt.artsyapp.R
+import com.brycecorbitt.artsyapp.api.GeoAddress
 import com.brycecorbitt.artsyapp.api.ResponseHandler
 import com.brycecorbitt.artsyapp.api.User
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import com.shivtechs.maplocationpicker.LocationPickerActivity
 import com.shivtechs.maplocationpicker.MapUtility
@@ -21,6 +26,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_preferences.*
 
 const val LOCATIONPICKERREQUEST = 2
+const val TAG = "Preferences"
 
 class PreferencesFragment : Fragment() {
 
@@ -47,6 +53,7 @@ class PreferencesFragment : Fragment() {
         super.onCreate(savedInstanceState)
         MapUtility.apiKey = resources.getString(R.string.your_api_key)
         user = User.get()
+        var handler: ResponseHandler = ResponseHandler(context)
     }
 
     override fun onCreateView(
@@ -73,7 +80,7 @@ class PreferencesFragment : Fragment() {
         emailTextView.text = user.email
         Picasso.get().load(user.profile_url).into(profilePic)
         locationButton.text = settingsViewModel.currentLocationButtonText
-        if(settingsViewModel.currentUnit.equals("mi")) {
+        if (settingsViewModel.currentUnit.equals("mi")) {
             locationTextView.text = "Select your location radius for posts (mi):"
             miRadio.isChecked = true
             miSlider.value = settingsViewModel.currentRadius
@@ -128,12 +135,20 @@ class PreferencesFragment : Fragment() {
             }
         }
         deleteAccount.setOnClickListener {
-            appCaller.deleteAccount()
-            val activity: Activity? = activity
-            if (activity is MainActivity) {
-                val myactivity: MainActivity? = activity
-                myactivity?.showLogin()
-            }
+            MaterialAlertDialogBuilder(context!!)
+                .setMessage("Are you sure?")
+                .setPositiveButton(
+                    "Delete Account",
+                    DialogInterface.OnClickListener { dialog, i ->
+                        appCaller.deleteAccount()
+                        val activity: Activity? = activity
+                        if (activity is MainActivity) {
+                            val myactivity: MainActivity? = activity
+                            myactivity?.showLogin()
+                        }
+                    })
+                .setNegativeButton("cancel", null)
+                .show()
         }
         locationButton.setOnClickListener {
             val i: Intent = Intent(activity, LocationPickerActivity::class.java)
@@ -146,8 +161,8 @@ class PreferencesFragment : Fragment() {
         if (requestCode == LOCATIONPICKERREQUEST) {
             try {
                 if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
-                    settingsViewModel.setLat(data.getFloatExtra(MapUtility.LATITUDE, 0.0F))
-                    settingsViewModel.setLong(data.getFloatExtra(MapUtility.LONGITUDE, 0.0F))
+                    settingsViewModel.setGlobalLocation(data.getFloatExtra(MapUtility.LATITUDE, 0.0F),
+                        data.getFloatExtra(MapUtility.LONGITUDE, 0.0F))
                     var s: String? = data.getBundleExtra("fullAddress").getString("city")
                     if (s != null) {
                         settingsViewModel.setLocationButtonText(s)
